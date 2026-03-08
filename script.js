@@ -1,134 +1,53 @@
-const papers = document.querySelectorAll('.paper');
-let highestZ = 1;
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maria</title>
 
-papers.forEach((paper) => {
-  let isDragging = false;
-  let offsetX = 0;
-  let offsetY = 0;
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Short+Stack&family=Homemade+Apple&display=swap">
 
-  // posição inicial aleatória leve
-  let currentX = 0;
-  let currentY = 0;
-  let rotation = Math.random() * 20 - 10;
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-  paper.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rotation}deg)`;
+  <div class="paper heart"></div>
 
-  function startDrag(clientX, clientY) {
-    isDragging = true;
-    paper.style.zIndex = highestZ++;
-    offsetX = clientX - paper.getBoundingClientRect().left;
-    offsetY = clientY - paper.getBoundingClientRect().top;
-  }
+  <div class="paper image">
+    <p>Fica na paz</p>
+    <p>e tenha um ótimo dia 🌷</p>
+    <img src="https://iili.io/qTCddFI.jpg" alt="Gatinho fofo">
+  </div>
 
-  function moveDrag(clientX, clientY) {
-    if (!isDragging) return;
+  <div class="paper image">
+    <p>Não se esqueça</p>
+    <p>de tomar café ☕</p>
+    <img src="https://iili.io/qTBUvV4.png" alt="Gato derrubando café">
+  </div>
 
-    const x = clientX - offsetX;
-    const y = clientY - offsetY;
+  <div class="paper image">
+    <p>Que o seu dia seja</p>
+    <p>tão tranquilo quanto esse gato 🐱</p>
+    <img src="https://iili.io/qTB9ypj.jpg" alt="Gato tranquilo">
+  </div>
 
-    paper.style.left = `${x}px`;
-    paper.style.top = `${y}px`;
-    paper.style.transform = `rotate(${rotation}deg)`;
-  }
+  <div class="paper red">
+    <p class="p1">Um pequeno site</p>
+    <p class="p2">pra te desejar um dia leve</p>
+  </div>
 
-  function endDrag() {
-    isDragging = false;
-  }
+  <div class="paper">
+    <p class="p1">Feliz dia das mulheres</p>
+    <p class="p1">Maria <span style="color: red;">🌹</span></p>
+  </div>
 
-  // Mouse
-  paper.addEventListener('mousedown', (e) => {
-    e.preventDefault();
-    startDrag(e.clientX, e.clientY);
-  });
+  <div class="paper">
+    <p class="p1">Arraste os papéis</p>
+    <p class="p1">para movê-los!</p>
+  </div>
 
-  document.addEventListener('mousemove', (e) => {
-    moveDrag(e.clientX, e.clientY);
-  });
-
-  document.addEventListener('mouseup', endDrag);
-
-  // Touch
-  paper.addEventListener(
-    'touchstart',
-    (e) => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      startDrag(touch.clientX, touch.clientY);
-    },
-    { passive: false }
-  );
-
-  document.addEventListener(
-    'touchmove',
-    (e) => {
-      if (!isDragging) return;
-      e.preventDefault();
-      const touch = e.touches[0];
-      moveDrag(touch.clientX, touch.clientY);
-    },
-    { passive: false }
-  );
-
-  document.addEventListener('touchend', endDrag);
-  document.addEventListener('touchcancel', endDrag);
-});let highestZ = 1;
-
-class Paper {
-  holdingPaper = false;
-  prevX = 0;
-  prevY = 0;
-  currentPaperX = 0;
-  currentPaperY = 0;
-  rotating = false;
-  touchStartX = 0;
-  touchStartY = 0;
-  currentRotation = Math.random() * 30 - 15;
-
-  init(paper) {
-    paper.style.transform = `translate(0px, 0px) rotate(${this.currentRotation}deg)`;
-
-    paper.addEventListener("pointerdown", (e) => {
-      this.holdingPaper = true;
-      paper.style.zIndex = highestZ;
-      highestZ += 1;
-
-      this.prevX = e.clientX;
-      this.prevY = e.clientY;
-
-      if (e.pointerType === "touch") {
-        paper.setPointerCapture(e.pointerId);
-      }
-    });
-
-    paper.addEventListener("pointermove", (e) => {
-      if (!this.holdingPaper) return;
-
-      const deltaX = e.clientX - this.prevX;
-      const deltaY = e.clientY - this.prevY;
-
-      this.currentPaperX += deltaX;
-      this.currentPaperY += deltaY;
-
-      this.prevX = e.clientX;
-      this.prevY = e.clientY;
-
-      paper.style.transform =
-        `translate(${this.currentPaperX}px, ${this.currentPaperY}px) rotate(${this.currentRotation}deg)`;
-    });
-
-    const stopHolding = () => {
-      this.holdingPaper = false;
-    };
-
-    paper.addEventListener("pointerup", stopHolding);
-    paper.addEventListener("pointercancel", stopHolding);
-  }
-}
-
-const papers = document.querySelectorAll(".paper");
-
-papers.forEach(paper => {
-  const p = new Paper();
-  p.init(paper);
-});
-
+  <script src="script.js"></script>
+</body>
+</html>
