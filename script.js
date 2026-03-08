@@ -1,53 +1,77 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Maria</title>
+const papers = document.querySelectorAll(".paper");
+let highestZ = 1;
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Short+Stack&family=Homemade+Apple&display=swap">
+papers.forEach((paper) => {
+  if (paper.classList.contains("heart")) return;
 
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+  let isDragging = false;
+  let offsetX = 0;
+  let offsetY = 0;
 
-  <div class="paper heart"></div>
+  // rotação inicial aleatória
+  const rotation = Math.random() * 20 - 10;
+  paper.dataset.rotation = rotation;
+  paper.style.transform = `rotate(${rotation}deg)`;
 
-  <div class="paper image">
-    <p>Fica na paz</p>
-    <p>e tenha um ótimo dia 🌷</p>
-    <img src="https://iili.io/qTCddFI.jpg" alt="Gatinho fofo">
-  </div>
+  function startDrag(clientX, clientY) {
+    const rect = paper.getBoundingClientRect();
 
-  <div class="paper image">
-    <p>Não se esqueça</p>
-    <p>de tomar café ☕</p>
-    <img src="https://iili.io/qTBUvV4.png" alt="Gato derrubando café">
-  </div>
+    isDragging = true;
+    paper.style.zIndex = highestZ++;
 
-  <div class="paper image">
-    <p>Que o seu dia seja</p>
-    <p>tão tranquilo quanto esse gato 🐱</p>
-    <img src="https://iili.io/qTB9ypj.jpg" alt="Gato tranquilo">
-  </div>
+    offsetX = clientX - rect.left;
+    offsetY = clientY - rect.top;
+  }
 
-  <div class="paper red">
-    <p class="p1">Um pequeno site</p>
-    <p class="p2">pra te desejar um dia leve</p>
-  </div>
+  function moveDrag(clientX, clientY) {
+    if (!isDragging) return;
 
-  <div class="paper">
-    <p class="p1">Feliz dia das mulheres</p>
-    <p class="p1">Maria <span style="color: red;">🌹</span></p>
-  </div>
+    const x = clientX - offsetX;
+    const y = clientY - offsetY;
 
-  <div class="paper">
-    <p class="p1">Arraste os papéis</p>
-    <p class="p1">para movê-los!</p>
-  </div>
+    paper.style.left = `${x}px`;
+    paper.style.top = `${y}px`;
+    paper.style.transform = `rotate(${paper.dataset.rotation}deg)`;
+  }
 
-  <script src="script.js"></script>
-</body>
-</html>
+  function endDrag() {
+    isDragging = false;
+  }
+
+  // Mouse
+  paper.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    startDrag(e.clientX, e.clientY);
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    moveDrag(e.clientX, e.clientY);
+  });
+
+  document.addEventListener("mouseup", endDrag);
+
+  // Touch
+  paper.addEventListener(
+    "touchstart",
+    (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      startDrag(touch.clientX, touch.clientY);
+    },
+    { passive: false }
+  );
+
+  document.addEventListener(
+    "touchmove",
+    (e) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      moveDrag(touch.clientX, touch.clientY);
+    },
+    { passive: false }
+  );
+
+  document.addEventListener("touchend", endDrag);
+  document.addEventListener("touchcancel", endDrag);
+});
